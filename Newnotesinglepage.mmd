@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    %% The user Inputs to the form
+    %% The user clicks save
+    browser->>server: POST
+    https://fullstack-exampleapp.herokuapp.com/new_note
+    activate server
+    server-->>browser: 201 CREATED
+    Note right of the browser: The browser starts executing the JavaScript code that fetches the JSON from the server

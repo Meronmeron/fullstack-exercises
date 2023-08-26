@@ -1,0 +1,36 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    %% The user Inputs to the form
+    %% The user clicks save
+    browser->>server: POST
+    https://fullstack-exampleapp.herokuapp.com/new_note
+    activate server
+    server-->>browser: 302 Created
+    deactivate server
+
+    browser->>server:GET
+    https://fullstack-exampleapp.herokuapp.com/notes?page=1&perPage=5
+    activate server
+    server-->>browser: HTML document
+    deactivate server
+
+
+    browser->>server:GET
+    https://fullstack-exampleapp.herokuapp.com/main.css?page=1&perPage=5
+    activate server
+    server-->>browser: CSS stylesheet
+    deactivate server
+
+    browser->>server:GET
+    https://fullstack-exampleapp.herokuapp.com/main.js?page=1&perPage=5
+    activate server
+    server-->>browser: JavaScript file
+    deactivate server
+
+    browser->>server:GET
+    https://fullstack-exampleapp.herokuapp.com/data.JSON?page=1&perPage=5
+    activate server
+    server-->>browser: JSON data
+    deactivate server
