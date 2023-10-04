@@ -1,4 +1,6 @@
 const express = require('express')
+const morgan = require('morgan')
+const morganBody = require('morgan-body')
 const app = express()
 
 let persons = [
@@ -23,6 +25,14 @@ let persons = [
     "number": "39-23-6423122"
   }
 ]
+app.use(morgan('dev'));
+
+morganBody(app, {
+  noColors: true,  // Disable color coding
+  stream: process.stdout,  // Output to the console
+  logReqDateTime: false, // Disable logging request date and time
+  logRequestBody: true,  // Enable logging of request body
+});
 app.get('/', (request, response) => {
   response.send('<h1>Hello there</h1>')
   
