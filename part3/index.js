@@ -1,7 +1,19 @@
 const express = require('express')
-const morgan = require('morgan')
-const morganBody = require('morgan-body')
 const app = express()
+const cors = require('cors')
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+
+app.use(cors())
+app.use(express.json())
+app.use(requestLogger)
+app.use(express.static('build'))
+
 
 let persons = [
   { 
@@ -25,17 +37,10 @@ let persons = [
     "number": "39-23-6423122"
   }
 ]
-app.use(morgan('dev'));
 
-morganBody(app, {
-  noColors: true,  // Disable color coding
-  stream: process.stdout,  // Output to the console
-  logReqDateTime: false, // Disable logging request date and time
-  logRequestBody: true,  // Enable logging of request body
-});
+
 app.get('/', (request, response) => {
   response.send('<h1>Hello there</h1>')
-  
   
 })
 app.get('/info',(request, response) =>{
@@ -69,25 +74,56 @@ const generateId = () => {
 }
 
 app.post('/api/persons', (request, response) => {
-  const body = request.body
-
-  if (!body.content) {
+  if (!request.body || Object.keys(request.body).length === 0) {
     return response.status(400).json({ 
-      error: 'content missing' 
-    })
+      error: 'Empty request body' 
+    });
   }
 
-  const person = {
-    content: body.content,
-    important: body.important || false,
-    id: generateId(),
+  try {
+    const body = JSON.parse(request.body);
+
+    if (!body.name || !body.number) {
+      return response.status(400).json({ 
+        error: 'Content missing' 
+      });
+    }
+
+    const person = {
+      id: generateId(),
+      name: body.name,
+      number: body.number,  
+    }
+
+    persons = persons.concat(person);
+
+    response.json(person);
+  } catch (error) {
+    return response.status(400).json({ 
+      error: 'Invalid JSON format' 
+    });
+  }
+});
+const errorHandler = (error, req, res, next) => {
+  console.log(error.message)
+
+  if (error.name ==='CastError'){
+      return res.status(400).send({error: 'malformatted id'})
+  } else if (error.name ==='ValidationError'){
+      return res.status(400).send({error: error.message})
   }
 
-  persons = persons.concat(person)
+  next(error)
+}
 
-  response.json(person)
-})
-const PORT = 3001
+app.use(errorHandler)
+
+const unknownEndPoint = (req, res) => {
+  res.status(500).json({error: 'Something went wrong'})
+}
+
+app.use(unknownEndPoint)
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

@@ -1,0 +1,44 @@
+{
+  "persons": [
+    {
+      "name": "Arto Hellas",
+      "number": "678-123-4567",
+      "id": 1
+    },
+    {
+      "name": "Ada Lovelace",
+      "number": "39-44-5323523",
+      "id": 2
+    },
+    {
+      "name": "Dan Abramov",
+      "number": "12-43-234345",
+      "id": 3
+    },
+    {
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": 4
+    },
+    {
+      "name": "Meron",
+      "number": "87-123-4566",
+      "id": 5
+    },
+    {
+      "name": "Marta",
+      "number": "12-345-567",
+      "id": 6
+    },
+    {
+      "name": "Abebe",
+      "number": "09-987-987",
+      "id": 7
+    },
+    {
+      "name": "Abera",
+      "number": "98-1234-456",
+      "id": 8
+    }
+  ]
+}
